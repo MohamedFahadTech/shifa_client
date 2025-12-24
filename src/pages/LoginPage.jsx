@@ -1,22 +1,50 @@
 import React, { useState } from "react";
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
 
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
-
-    const changePage = () => { navigate('/layout') }
-
-    const emailChange = (e) => {
+    const [fahad, setEmail] = useState("");
+    const [haneef, setPassword] = useState("");
+    const EmailQ = (e) => {
         setEmail(e.target.value);
     }
+
     const passwordChange = (e) => {
         setPassword(e.target.value);
     }
+
+    const handleLogin = async () => {
+
+        if (!fahad) {
+            alert('usename required')
+        }
+
+        try {
+            const kamal = await axios.post('http://localhost:5000/user/login', {
+                email: fahad,
+                password: haneef
+            });
+            console.log(kamal.data)
+            if (kamal.data.success) {
+                navigate('/layout/home')
+
+            }
+            else {
+                alert(kamal.data.message)
+            }
+        }
+        catch {
+            console.log('error in login', error)
+        }
+    }
+
+
+
+
 
 
     return (
@@ -62,7 +90,7 @@ function LoginPage() {
                     </div>
 
                     {/* FORM */}
-                    <form className="space-y-6">
+                    <div className="space-y-6">
                         {/* Email */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -75,8 +103,9 @@ function LoginPage() {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={email}
-                                    onChange={emailChange}
+                                    value={fahad}
+                                    onChange={EmailQ}
+
                                     placeholder="name@company.com"
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F6C453]"
                                 />
@@ -102,8 +131,8 @@ function LoginPage() {
                                 </div>
                                 <input
                                     type="password"
-                                    value={password}
                                     placeholder="••••••••"
+                                    value={haneef}
                                     onChange={passwordChange}
                                     className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F6C453]"
                                 />
@@ -127,7 +156,8 @@ function LoginPage() {
                         {/* Sign In */}
                         <button
                             type="button"
-                            onClick={changePage}
+                            onClick={handleLogin}
+
                             className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-[#0B0C0F] hover:bg-gray-800 transition-all"
                         >
                             Sign In
@@ -157,7 +187,7 @@ function LoginPage() {
                             />
                             Sign in with Google
                         </button>
-                    </form>
+                    </div>
 
                     {/* Footer */}
                     <p className="mt-8 text-center text-sm text-gray-600">

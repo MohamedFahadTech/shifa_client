@@ -103,11 +103,11 @@ function Customer() {
               { time: "02:00 PM", type: "Pickup", client: "Julian C.", color: "border-l-amber-400" },
               { time: "04:45 PM", type: "Delivery", client: "Amara S.", color: "border-l-emerald-400" },
             ].map((slot, i) => (
-              <div key={i} className={`p-4 rounded-2xl bg-gray-50 border-l-4 ${slot.color} flex items-center justify-between group cursor-pointer hover:bg-gray-100 transition-colors`}>
+              <div key={i} className={`p-4 rounded-2xl bg-gray-50 border-l-4 ₹{slot.color} flex items-center justify-between group cursor-pointer hover:bg-gray-100 transition-colors`}>
                 <div>
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">{slot.time}</p>
                   <p className="text-sm font-bold text-[#0B0C0F]">{slot.client}</p>
-                  <p className={`text-[10px] font-bold ${slot.type === 'Pickup' ? 'text-amber-600' : 'text-emerald-600'}`}>{slot.type}</p>
+                  <p className={`text-[10px] font-bold ₹{slot.type === 'Pickup' ? 'text-amber-600' : 'text-emerald-600'}`}>{slot.type}</p>
                 </div>
                 <ChevronRightIcon className="h-4 w-4 text-gray-300 group-hover:text-[#0B0C0F]" />
               </div>

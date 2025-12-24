@@ -9,12 +9,15 @@ import Pickup from "./pages/Pickup";
 import Subscription from "./pages/Subscription";
 import Delivery from "./pages/Delivery";
 import Analytics from "./pages/Analytics";
+import Home from "./pages/Home";
+import Booking from "./Userview/Booking";
+
 function App() {
 	return (
 		<Router>
 			<Routes>
 				<Route path="/" element={<LoginPage />} />
-				<Route path="/layout" element={<DashboardLayout />}>
+				<Route path="/layout/*" element={<DashboardLayout />}>
 					<Route path="dashboard" element={<Dashboard />} />
 					<Route path="laundryOrder" element={<LaundryOrder />} />
 					<Route path="customer" element={<Customer />} />
@@ -22,6 +25,9 @@ function App() {
 					<Route path="subscriptions" element={<Subscription />} />
 					<Route path="delivery" element={<Delivery />} />
 					<Route path="Analytics" element={<Analytics />} />
+					<Route path="home" element={<Home />} />
+					<Route path="Booking"element={<Booking/>}/>
+					
 										
 				</Route>
 			</Routes>
