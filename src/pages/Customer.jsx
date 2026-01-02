@@ -1,122 +1,127 @@
 import React, { useState } from 'react';
 import { 
   UserPlusIcon, 
-  MapPinIcon, 
   PhoneIcon, 
+  ChatBubbleLeftEllipsisIcon,
   CalendarDaysIcon,
-  ChevronRightIcon,
-  StarIcon,
-  FunnelIcon
+  MapPinIcon,
+  MagnifyingGlassIcon
 } from "@heroicons/react/24/outline";
 
-const CustomerCard = ({ name, email, plan, spent, lastOrder }) => (
-  <div className="bg-white p-5 rounded-[24px] border border-gray-100 hover:border-[#F6C453] transition-all group cursor-pointer shadow-sm">
-    <div className="flex items-center gap-4">
-      <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center font-bold text-[#0B0C0F] border border-gray-200">
-        {name.split(' ').map(n => n[0]).join('')}
-      </div>
-      <div className="flex-1">
-        <h4 className="font-bold text-[#0B0C0F] group-hover:text-[#F6C453] transition-colors">{name}</h4>
-        <p className="text-xs text-gray-400 font-medium">{email}</p>
+// Simplified Card: Focus on Contact and Money
+const CustomerCard = ({ name, phone, plan, balance, lastVisit }) => (
+  <div className="bg-white p-5 rounded-3xl border border-gray-100 hover:shadow-md transition-all">
+    <div className="flex justify-between items-start mb-4">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center font-black text-sm">
+          {name.split(' ').map(n => n[0]).join('')}
+        </div>
+        <div>
+          <h4 className="font-bold text-[#0B0C0F]">{name}</h4>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{plan} Member</p>
+        </div>
       </div>
       <div className="text-right">
-        <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase ${
-          plan === 'Premium' ? 'bg-[#F6C453] text-[#0B0C0F]' : 'bg-gray-100 text-gray-500'
-        }`}>
-          {plan}
-        </span>
+        <p className="text-[10px] text-gray-400 font-bold uppercase">Total Business</p>
+        <p className="text-sm font-black text-emerald-600">₹{balance}</p>
       </div>
     </div>
-    
-    <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-gray-50">
-      <div>
-        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Total Spent</p>
-        <p className="text-sm font-black text-[#0B0C0F]">{spent}</p>
-      </div>
-      <div className="text-right">
-        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Last Visit</p>
-        <p className="text-sm font-bold text-gray-600">{lastOrder}</p>
-      </div>
+
+    {/* Quick Action Buttons: Real-world usage */}
+    <div className="grid grid-cols-2 gap-2 mt-4">
+      <button className="flex items-center justify-center gap-2 py-2 bg-gray-50 rounded-xl text-[10px] font-bold hover:bg-blue-50 hover:text-blue-600 transition-colors">
+        <PhoneIcon className="h-3 w-3" /> Call
+      </button>
+      <button className="flex items-center justify-center gap-2 py-2 bg-gray-50 rounded-xl text-[10px] font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+        <ChatBubbleLeftEllipsisIcon className="h-3 w-3" /> WhatsApp
+      </button>
+    </div>
+
+    <div className="mt-4 pt-3 border-t border-dashed border-gray-100 flex justify-between items-center">
+      <span className="text-[10px] text-gray-400 font-medium">Last Order: {lastVisit}</span>
+      <button className="text-[10px] font-bold text-yellow-600 underline">View History</button>
     </div>
   </div>
 );
 
 function Customer() {
-  const [activeTab, setActiveTab] = useState('All');
+  const [search, setSearch] = useState('');
 
   return (
-    <div className="space-y-8">
-      {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto space-y-6 p-2">
+      
+      {/* 1. TOP HEADER & SEARCH */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm">
         <div>
-          <h2 className="text-3xl font-black text-[#0B0C0F] italic">CLIENT <span className="text-[#F6C453] not-italic">HUB</span></h2>
-          <p className="text-gray-500 text-sm font-medium">Manage your elite customer base and their preferences.</p>
+          <h2 className="text-2xl font-black text-[#0B0C0F] uppercase tracking-tighter">
+            Customer <span className="text-yellow-500">Directory</span>
+          </h2>
+          <p className="text-gray-400 text-xs font-bold">Manage your {42} active clients</p>
         </div>
-        <button className="flex items-center justify-center gap-2 bg-[#0B0C0F] text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-800 transition-all shadow-lg shadow-gray-200">
-          <UserPlusIcon className="h-5 w-5 text-[#F6C453]" />
-          Register New Client
+        
+        <div className="flex flex-1 max-w-md items-center gap-3 bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+          <input 
+            type="text" 
+            placeholder="Search by name or phone..." 
+            className="bg-transparent border-none text-sm focus:outline-none w-full font-medium"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <button className="flex items-center justify-center gap-2 bg-[#0B0C0F] text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-yellow-500 hover:text-black transition-all">
+          <UserPlusIcon className="h-4 w-4" /> Add Client
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* MAIN CUSTOMER LIST */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Filters */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {['All', 'Premium Members', 'Regular', 'Inactive'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
-                  activeTab === tab 
-                  ? 'bg-[#0B0C0F] text-white border-[#0B0C0F]' 
-                  : 'bg-white text-gray-500 border-gray-200 hover:border-[#F6C453]'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-            <button className="ml-auto p-2 text-gray-400 hover:text-[#0B0C0F]">
-              <FunnelIcon className="h-5 w-5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <CustomerCard name="Marcus Aurelius" email="marcus@empire.com" plan="Premium" spent="$1,420.00" lastOrder="2 days ago" />
-            <CustomerCard name="Sophia Loren" email="sophia@style.it" plan="Regular" spent="$450.00" lastOrder="Today" />
-            <CustomerCard name="Julian Casablancas" email="julian@strokes.com" plan="Premium" spent="$890.00" lastOrder="1 week ago" />
-            <CustomerCard name="Amara Singh" email="amara@tech.io" plan="Regular" spent="$120.00" lastOrder="5 days ago" />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* 2. CUSTOMER GRID */}
+        <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <CustomerCard name="Marcus Aurelius" phone="9876543210" plan="Premium" balance="14,200" lastVisit="2 days ago" />
+            <CustomerCard name="Sophia Loren" phone="9811223344" plan="Regular" balance="4,500" lastVisit="Today" />
+            <CustomerCard name="Julian Casablancas" phone="9900887766" plan="Premium" balance="8,900" lastVisit="1 week ago" />
+            <CustomerCard name="Amara Singh" phone="9722334455" plan="Regular" balance="1,200" lastVisit="5 days ago" />
           </div>
         </div>
 
-        {/* SIDEBAR: PICKUP SCHEDULE */}
-        <div className="bg-white rounded-[32px] border border-gray-100 p-6 shadow-sm self-start">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-[#0B0C0F] text-sm uppercase tracking-widest">Today's Schedule</h3>
-            <CalendarDaysIcon className="h-5 w-5 text-[#F6C453]" />
-          </div>
-
-          <div className="space-y-4">
-            {[
-              { time: "09:00 AM", type: "Pickup", client: "Marcus A.", color: "border-l-amber-400" },
-              { time: "11:30 AM", type: "Delivery", client: "Sophia L.", color: "border-l-emerald-400" },
-              { time: "02:00 PM", type: "Pickup", client: "Julian C.", color: "border-l-amber-400" },
-              { time: "04:45 PM", type: "Delivery", client: "Amara S.", color: "border-l-emerald-400" },
-            ].map((slot, i) => (
-              <div key={i} className={`p-4 rounded-2xl bg-gray-50 border-l-4 ₹{slot.color} flex items-center justify-between group cursor-pointer hover:bg-gray-100 transition-colors`}>
-                <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">{slot.time}</p>
-                  <p className="text-sm font-bold text-[#0B0C0F]">{slot.client}</p>
-                  <p className={`text-[10px] font-bold ₹{slot.type === 'Pickup' ? 'text-amber-600' : 'text-emerald-600'}`}>{slot.type}</p>
+        {/* 3. SIDEBAR: PICKUP LIST */}
+        <div className="space-y-4">
+          <div className="bg-[#0B0C0F] rounded-[32px] p-6 text-white">
+            <div className="flex items-center gap-3 mb-6">
+              <CalendarDaysIcon className="h-6 w-6 text-yellow-500" />
+              <h3 className="font-bold text-sm">Today's Visits</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {[
+                { time: "10 AM", name: "Marcus A.", action: "Pickup", addr: "B-Block, Apt 4" },
+                { time: "12 PM", name: "Sophia L.", action: "Delivery", addr: "Main St, 12" },
+              ].map((item, i) => (
+                <div key={i} className="bg-white/5 p-3 rounded-2xl border border-white/10 group cursor-pointer hover:bg-white/10 transition-all">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-[10px] font-black text-yellow-500 uppercase">{item.time} — {item.action}</span>
+                  </div>
+                  <p className="text-sm font-bold">{item.name}</p>
+                  <div className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
+                    <MapPinIcon className="h-3 w-3" /> {item.addr}
+                  </div>
                 </div>
-                <ChevronRightIcon className="h-4 w-4 text-gray-300 group-hover:text-[#0B0C0F]" />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <button className="w-full mt-6 py-3 border-2 border-dashed border-gray-200 rounded-2xl text-xs font-bold text-gray-400 hover:border-[#F6C453] hover:text-[#F6C453] transition-all">
-            + Schedule Appointment
-          </button>
+            <button className="w-full mt-6 py-3 bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+              View Schedule
+            </button>
+          </div>
+          
+          <div className="p-6 bg-yellow-50 rounded-[32px] border border-yellow-100">
+             <p className="text-[10px] font-black text-yellow-700 uppercase mb-2">Pro Tip</p>
+             <p className="text-xs text-yellow-800 leading-relaxed font-medium">
+               Call Premium members 1 hour before pickup to confirm availability.
+             </p>
+          </div>
         </div>
       </div>
     </div>

@@ -73,12 +73,13 @@ const DashboardLayout = () => {
 						<SidebarItem to="/layout/subscriptions" icon={TicketIcon} label="Subscriptions" onClick={() => setIsMobileMenuOpen(false)} />
 						<SidebarItem to="/layout/home" icon={AcademicCapIcon} label="Home" onClick={() => setIsMobileMenuOpen(false)} />
 						<SidebarItem to="/layout/Booking"icon={ClipboardDocumentListIcon}label="Booking"onClick={() => setIsMobileMenuOpen(false)}/>
+						<SidebarItem to="/layout/settings" icon={Cog6ToothIcon} label="Settings" onClick={() => setIsMobileMenuOpen(false)} />
 
 					</nav>
 
 					{/* Bottom Section */}
 					<div className="pt-6 border-t border-white/10 space-y-2">
-						<SidebarItem to="/settings" icon={Cog6ToothIcon} label="Settings" onClick={() => setIsMobileMenuOpen(false)} />
+						<SidebarItem to="/settings" icon={Cog6ToothIcon} label="Logout" onClick={() => setIsMobileMenuOpen(false)} />
 						<button className="flex items-center space-x-3 px-4 py-3 w-full text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all group">
 							<ArrowLeftOnRectangleIcon className="h-5 w-5" />
 							<span className="text-[15px] font-semibold tracking-tight">Sign Out</span>

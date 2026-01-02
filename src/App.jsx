@@ -11,6 +11,8 @@ import Delivery from "./pages/Delivery";
 import Analytics from "./pages/Analytics";
 import Home from "./pages/Home";
 import Booking from "./Userview/Booking";
+import Setting from "./Userview/Setting";
+
 
 function App() {
 	return (
@@ -27,7 +29,7 @@ function App() {
 					<Route path="Analytics" element={<Analytics />} />
 					<Route path="home" element={<Home />} />
 					<Route path="Booking"element={<Booking/>}/>
-					
+					<Route path="Setting"element={<Setting />}/>
 										
 				</Route>
 			</Routes>
