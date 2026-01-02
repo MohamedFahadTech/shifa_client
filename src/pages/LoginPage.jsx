@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function AuthPage() {
-    
+
     const navigate = useNavigate();
-    
+
     // Toggle & UI States
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -25,14 +25,14 @@ function AuthPage() {
             return;
         }
 
-        const payload = isLogin 
-            ? { email, password } 
-            : { name, email, password, phone, addresses: [{ addressLine: address }] };
+        const payload = isLogin
+            ? { email, password }
+            : { name, email, password, phone, address };
 
         try {
             const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
             if (response.data.success) {
-                if (isLogin) { navigate('/layout/home'); } 
+                if (isLogin) { navigate('/layout/home'); }
                 else { setIsLogin(true); }
             } else { alert(response.data.message); }
         } catch (error) {
@@ -45,10 +45,10 @@ function AuthPage() {
             {/* LEFT BRANDING SIDE */}
             <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 overflow-hidden">
                 <div className="absolute inset-0 z-0 transition-transform duration-700 hover:scale-105 bg-[url('https://images.unsplash.com/photo-1545173153-93627708ef4a?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
-                
+
                 {/* Decorative Blur Circles */}
                 <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#F6C453] rounded-full blur-[120px] opacity-20 animate-pulse"></div>
-                
+
                 <div className="relative z-10 text-center">
                     <div className="inline-block px-4 py-1.5 mb-6 border border-[#F6C453]/30 rounded-full bg-[#F6C453]/10 backdrop-blur-sm">
                         <span className="text-[#F6C453] text-xs font-bold tracking-[0.2em] uppercase">Premium Laundry</span>
@@ -63,7 +63,7 @@ function AuthPage() {
             {/* RIGHT FORM SIDE */}
             <div className="w-full lg:w-1/2 flex items-center justify-center bg-white shadow-2xl z-20">
                 <div className="w-full max-w-md px-8 lg:px-12 py-4">
-                    
+
                     {/* Header */}
                     <div className="mb-6">
                         <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-3">
@@ -104,7 +104,7 @@ function AuthPage() {
                         </div>
 
                         {!isLogin && (
-                             <div className="space-y-2">
+                            <div className="space-y-2">
                                 <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">Default Address</label>
                                 <div className="relative group">
                                     <MapPinIcon className="absolute left-3 top-7.5 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-[#F6C453] transition-colors" />
