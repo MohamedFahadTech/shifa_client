@@ -72,9 +72,8 @@ const DashboardLayout = () => {
 						<SidebarItem to="/layout/delivery" icon={TruckIcon} label="Deliveries" onClick={() => setIsMobileMenuOpen(false)} />
 						<SidebarItem to="/layout/subscriptions" icon={TicketIcon} label="Subscriptions" onClick={() => setIsMobileMenuOpen(false)} />
 						<SidebarItem to="/layout/home" icon={AcademicCapIcon} label="Home" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/Booking"icon={ClipboardDocumentListIcon}label="Booking"onClick={() => setIsMobileMenuOpen(false)}/>
+						<SidebarItem to="/layout/bookings" icon={ClipboardDocumentListIcon} label="Bookings" onClick={() => setIsMobileMenuOpen(false)} />
 						<SidebarItem to="/layout/settings" icon={Cog6ToothIcon} label="Settings" onClick={() => setIsMobileMenuOpen(false)} />
-
 					</nav>
 
 					{/* Bottom Section */}

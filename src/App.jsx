@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import DashboardLayout from "./pages/LayoutPage";
+import Layout from "./pages/LayoutPage";
 import Dashboard from "./pages/Dashboard";
 import LaundryOrder from "./pages/LaundryOrder";
 import Customer from "./pages/Customer";
@@ -10,16 +10,15 @@ import Subscription from "./pages/Subscription";
 import Delivery from "./pages/Delivery";
 import Analytics from "./pages/Analytics";
 import Home from "./pages/Home";
-import Booking from "./Userview/Booking";
-import Setting from "./Userview/Setting";
-
+import Booking from "./pages/Booking";
 
 function App() {
+
 	return (
 		<Router>
 			<Routes>
 				<Route path="/" element={<LoginPage />} />
-				<Route path="/layout/*" element={<DashboardLayout />}>
+				<Route path="/layout/*" element={<Layout />}>
 					<Route path="dashboard" element={<Dashboard />} />
 					<Route path="laundryOrder" element={<LaundryOrder />} />
 					<Route path="customer" element={<Customer />} />
@@ -28,9 +27,7 @@ function App() {
 					<Route path="delivery" element={<Delivery />} />
 					<Route path="Analytics" element={<Analytics />} />
 					<Route path="home" element={<Home />} />
-					<Route path="Booking"element={<Booking/>}/>
-					<Route path="Setting"element={<Setting />}/>
-										
+					<Route path="bookings" element={<Booking />} />
 				</Route>
 			</Routes>
 		</Router>
