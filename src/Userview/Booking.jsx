@@ -11,9 +11,10 @@ import {
 
 const Booking = () => {
   const [services, setServices] = useState([]);
-  const [selections, setSelections] = useState(null); // Active item being configured
+  const [selections, setSelections] = useState(null); 
   const [cart, setCart] = useState([]);
-  const [step, setStep] = useState("selection"); // selection, success
+  const [step, setStep] = useState("selection"); 
+  const [isMobileBasketOpen, setIsMobileBasketOpen] = useState(false);
 
   const categoryImages = {
     Shirt: "https://cdn-icons-png.flaticon.com/512/2503/2503380.png",
@@ -77,130 +78,87 @@ const Booking = () => {
   };
 
   const removeFromCart = (id) => setCart(cart.filter(i => i.id !== id));
+  const totalAmount = cart.reduce((s, i) => s + (i.price * i.qty), 0);
 
   if (step === "success") return <SuccessScreen />;
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-32 lg:pb-10">
-      {/* Header */}
-      <nav className="bg-white border-b sticky top-0 z-30 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-600 tracking-tight">Launderly.</h1>
-          <div className="flex items-center gap-2 text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full text-xs font-semibold">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Dynamic Header */}
+      <nav className="w-full bg-white border-b sticky top-0 z-40 px-[5%] py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <h1 className="text-xl sm:text-2xl font-black text-blue-600 tracking-tight">Launderly.</h1>
+          <div className="flex items-center gap-2 text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            Pick-up Available
+            <span className="hidden xs:inline tracking-wide uppercase">Pickup Active</span>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      {/* Responsive Layout Container */}
+      <main className="w-full max-w-7xl mx-auto p-[4%] lg:p-10 flex flex-col lg:flex-row gap-8 lg:items-start">
         
-        {/* Item Selection Grid */}
-        <div className="lg:col-span-8">
+        {/* Left Section: Fluid Grid */}
+        <div className="w-full lg:flex-[2]">
           <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-slate-900">What are we cleaning?</h2>
-            <p className="text-slate-500">Select an item to customize your service</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">Fast Service. <br className="sm:hidden" /> <span className="text-blue-600">Pure Clean.</span></h2>
+            <p className="text-slate-400 mt-2 font-medium">Select items to get started</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
             {services.map(cat => (
               <button 
                 key={cat.category}
                 onClick={() => openConfigurator(cat)}
-                className="bg-white p-6 rounded-3xl border border-slate-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-900/5 transition-all flex flex-col items-center group text-center"
+                className="bg-white aspect-square sm:aspect-auto sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all flex flex-col items-center justify-center group"
               >
-                <div className="w-16 h-16 mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-[40%] aspect-square mb-4 group-hover:scale-110 transition-transform">
                   <img src={categoryImages[cat.category]} alt="" className="w-full h-full object-contain" />
                 </div>
-                <span className="font-bold text-slate-700">{cat.category}</span>
-                <span className="text-[10px] uppercase tracking-widest text-slate-400 mt-1">Starting ₹{cat.fabrics[0]?.services[0]?.options[0]?.price}</span>
+                <span className="font-bold text-slate-800 text-sm sm:text-lg">{cat.category}</span>
+                <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest text-slate-300 mt-1">₹{cat.fabrics[0]?.services[0]?.options[0]?.price}+</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Right Sidebar: Summary */}
-        <div className="lg:col-span-4">
-          <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm p-8 sticky top-28">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <ShoppingBagIcon className="w-5 h-5" /> Your Basket
-              </h3>
-              <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-lg text-xs font-bold">{cart.length} items</span>
-            </div>
-
-            <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2">
-              {cart.length === 0 ? (
-                <div className="text-center py-10">
-                  <div className="bg-slate-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <PlusIcon className="w-6 h-6 text-slate-300" />
-                  </div>
-                  <p className="text-slate-400 text-sm font-medium">Add items to get started</p>
-                </div>
-              ) : (
-                cart.map(item => (
-                  <div key={item.id} className="flex justify-between items-center group animate-in fade-in slide-in-from-right-2">
-                    <div>
-                      <p className="font-bold text-sm">{item.qty}x {item.name}</p>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase">{item.desc}</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-sm text-slate-900">₹{item.price * item.qty}</span>
-                      <button onClick={() => removeFromCart(item.id)} className="text-slate-300 hover:text-red-500 transition-colors">
-                        <XMarkIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="border-t pt-6 space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-slate-500 font-medium">Total Amount</span>
-                <span className="text-3xl font-black text-slate-900">₹{cart.reduce((s, i) => s + (i.price * i.qty), 0)}</span>
-              </div>
-              <button 
-                onClick={() => setStep("success")}
-                disabled={cart.length === 0}
-                className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all disabled:opacity-30 active:scale-95 shadow-lg shadow-blue-200"
-              >
-                Checkout
-              </button>
-            </div>
+        {/* Desktop Sidebar: Flexible width */}
+        <div className="hidden lg:block lg:flex-1 sticky top-28">
+          <div className="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
+            <BasketContent cart={cart} removeFromCart={removeFromCart} totalAmount={totalAmount} setStep={setStep} />
           </div>
         </div>
       </main>
 
-      {/* Item Configurator Modal */}
+      {/* Responsive Modal / Bottom Sheet */}
       {selections && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setSelections(null)} />
-          <div className="relative bg-white w-full max-w-lg rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-in slide-in-from-bottom-10 duration-300">
-            <button onClick={() => setSelections(null)} className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 transition-colors">
-              <XMarkIcon className="w-6 h-6 text-slate-400" />
-            </button>
-
-            <div className="flex items-center gap-6 mb-8">
-              <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center p-4">
-                <img src={categoryImages[selections.category]} alt="" className="w-full h-full object-contain" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-black text-slate-900 leading-none mb-2">{selections.category}</h3>
-                <p className="text-blue-600 font-bold">₹{getUnitPrice(selections)} per unit</p>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 animate-in fade-in">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setSelections(null)} />
+          <div className="relative bg-white w-full sm:max-w-lg rounded-t-[2.5rem] sm:rounded-[3rem] shadow-2xl overflow-hidden p-8 sm:p-10 animate-in slide-in-from-bottom duration-300">
+            {/* Modal Header */}
+            <div className="flex justify-between items-start mb-8">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-blue-50 rounded-2xl p-3 flex items-center justify-center">
+                        <img src={categoryImages[selections.category]} alt="" className="w-full h-full object-contain" />
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-black text-slate-900">{selections.category}</h3>
+                        <p className="text-blue-600 font-bold">₹{getUnitPrice(selections)}/unit</p>
+                    </div>
+                </div>
+                <button onClick={() => setSelections(null)} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100"><XMarkIcon className="w-6 h-6"/></button>
             </div>
 
-            <div className="space-y-6">
-              {/* Fabric */}
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 block">Choose Fabric</label>
+            <div className="space-y-8">
+              {/* Flexible Fabric Toggles */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Fabric Type</label>
                 <div className="flex flex-wrap gap-2">
                   {selections.raw.fabrics.map(f => (
                     <button 
                       key={f.name}
                       onClick={() => setSelections({...selections, fabric: f.name})}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selections.fabric === f.name ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
+                      className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all border ${selections.fabric === f.name ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'}`}
                     >
                       {f.name}
                     </button>
@@ -208,16 +166,16 @@ const Booking = () => {
                 </div>
               </div>
 
-              {/* Service Type */}
+              {/* Responsive Service Tabs */}
               {!selections.raw.fabrics.find(f => f.name === selections.fabric).services.some(s => s.type === "Wash & Iron") && (
-                <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 block">Service Type</label>
-                  <div className="grid grid-cols-3 gap-2 bg-slate-50 p-1.5 rounded-2xl">
+                <div className="space-y-3">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Service Mode</label>
+                  <div className="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl">
                     {["Wash", "Iron", "Both"].map(m => (
                       <button 
                         key={m}
                         onClick={() => setSelections({...selections, mode: m})}
-                        className={`py-2 rounded-xl text-xs font-bold transition-all ${selections.mode === m ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
+                        className={`py-3 rounded-xl text-xs font-black transition-all ${selections.mode === m ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
                       >
                         {m}
                       </button>
@@ -226,55 +184,120 @@ const Booking = () => {
                 </div>
               )}
 
-              {/* Quantity */}
-              <div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl">
-                <div>
-                  <span className="text-sm font-bold text-slate-900">Total Quantity</span>
-                  <p className="text-xs text-slate-500">How many items?</p>
-                </div>
-                <div className="flex items-center gap-6">
-                  <button onClick={() => setSelections({...selections, count: Math.max(1, selections.count - 1)})} className="p-2 rounded-xl bg-white shadow-sm border border-slate-200 text-slate-600 hover:text-blue-600">
-                    <MinusIcon className="w-5 h-5" />
-                  </button>
-                  <span className="text-xl font-black text-slate-900 w-4 text-center">{selections.count}</span>
-                  <button onClick={() => setSelections({...selections, count: selections.count + 1})} className="p-2 rounded-xl bg-white shadow-sm border border-slate-200 text-slate-600 hover:text-blue-600">
-                    <PlusIcon className="w-5 h-5" />
-                  </button>
+              {/* Quantity Selector - Large Touch Area */}
+              <div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                <span className="font-black text-slate-800 uppercase tracking-widest text-xs">Quantity</span>
+                <div className="flex items-center gap-8">
+                  <button onClick={() => setSelections({...selections, count: Math.max(1, selections.count - 1)})} className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm border border-slate-200 active:scale-90"><MinusIcon className="w-5 h-5"/></button>
+                  <span className="text-2xl font-black text-slate-900">{selections.count}</span>
+                  <button onClick={() => setSelections({...selections, count: selections.count + 1})} className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm border border-slate-200 active:scale-90"><PlusIcon className="w-5 h-5"/></button>
                 </div>
               </div>
 
+              {/* Add Button */}
               <button 
                 onClick={addToCart}
-                className="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-bold text-lg flex justify-between items-center px-8 hover:bg-blue-700 transition-all active:scale-95"
+                className="w-full bg-blue-600 text-white py-6 rounded-[1.8rem] font-black text-lg flex justify-between items-center px-10 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-xl shadow-blue-200"
               >
-                <span>Add to Basket</span>
-                <span className="flex items-center gap-1">
-                  ₹{getUnitPrice(selections) * selections.count} <ChevronRightIcon className="w-4 h-4" />
-                </span>
+                <span>Add Item</span>
+                <span>₹{getUnitPrice(selections) * selections.count}</span>
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Mobile Sticky Basket Bar (Fluid) */}
+      {cart.length > 0 && (
+        <div className="lg:hidden fixed bottom-8 left-[5%] right-[5%] z-40 transition-all animate-in slide-in-from-bottom-10">
+            <button 
+                onClick={() => setIsMobileBasketOpen(true)}
+                className="w-full bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex justify-between items-center border border-slate-800"
+            >
+                <div className="flex items-center gap-4">
+                    <div className="bg-blue-600 w-10 h-10 rounded-xl flex items-center justify-center"><ShoppingBagIcon className="w-5 h-5" /></div>
+                    <span className="font-black tracking-tight">{cart.length} Items Selected</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-xl font-black">₹{totalAmount}</span>
+                    <ChevronRightIcon className="w-4 h-4 text-slate-500" />
+                </div>
+            </button>
+        </div>
+      )}
+
+      {/* Full Screen Mobile Basket Overlay */}
+      {isMobileBasketOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex flex-col">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setIsMobileBasketOpen(false)} />
+            <div className="relative mt-auto bg-white rounded-t-[3rem] p-8 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
+                <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8" />
+                <BasketContent cart={cart} removeFromCart={removeFromCart} totalAmount={totalAmount} setStep={setStep} isMobile />
+            </div>
         </div>
       )}
     </div>
   );
 };
 
-const SuccessScreen = () => (
-  <div className="min-h-screen flex items-center justify-center bg-white p-6">
-    <div className="text-center">
-      <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-        <CheckCircleIcon className="w-12 h-12 text-green-500" />
-      </div>
-      <h1 className="text-4xl font-black text-slate-900 mb-2">Order Confirmed!</h1>
-      <p className="text-slate-500 font-medium mb-8">Our executive will reach you within 30 minutes.</p>
-      <button 
-        onClick={() => window.location.reload()}
-        className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold tracking-tight hover:bg-blue-600 transition-all"
-      >
-        Done
-      </button>
+// Reusable Flexible Basket Component
+const BasketContent = ({ cart, removeFromCart, totalAmount, setStep, isMobile = false }) => (
+    <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-black text-slate-900">Your Basket</h3>
+            <span className="text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-600 px-3 py-1 rounded-full">{cart.length} Units</span>
+        </div>
+
+        <div className="space-y-6 mb-10">
+            {cart.length === 0 ? (
+                <div className="py-20 text-center opacity-30 font-black uppercase tracking-widest text-xs">Empty</div>
+            ) : (
+                cart.map(item => (
+                    <div key={item.id} className="flex justify-between items-center">
+                        <div>
+                            <p className="font-black text-slate-800 leading-tight">{item.qty}x {item.name}</p>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-tight">{item.desc}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span className="font-black text-slate-900">₹{item.price * item.qty}</span>
+                            <button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors">
+                                <XMarkIcon className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                ))
+            )}
+        </div>
+
+        <div className="mt-auto border-t pt-8 space-y-6">
+            <div className="flex justify-between items-end">
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Grand Total</span>
+                <span className="text-4xl font-black text-slate-900 tracking-tighter">₹{totalAmount}</span>
+            </div>
+            <button 
+                onClick={() => setStep("success")}
+                disabled={cart.length === 0}
+                className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg uppercase tracking-widest hover:bg-slate-900 transition-all disabled:opacity-20 shadow-xl shadow-blue-100"
+            >
+                Checkout
+            </button>
+        </div>
     </div>
+);
+
+const SuccessScreen = () => (
+  <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
+    <div className="w-24 h-24 bg-blue-50 text-blue-600 rounded-[2.5rem] flex items-center justify-center mb-8 animate-bounce">
+        <CheckCircleIcon className="w-12 h-12" />
+    </div>
+    <h1 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Order Placed!</h1>
+    <p className="text-slate-400 font-bold max-w-xs mx-auto mb-12">Hang tight! Our team is on the way to pick up your laundry.</p>
+    <button 
+      onClick={() => window.location.reload()}
+      className="w-full max-w-sm bg-slate-900 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl"
+    >
+      Continue Shopping
+    </button>
   </div>
 );
 
