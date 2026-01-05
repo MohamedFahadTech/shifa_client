@@ -185,6 +185,53 @@ const Booking = () => {
 								</div>
 							)}
 
+{/* Wash Quality */}
+{["Wash", "Both"].includes(selections.mode) && (
+  <div className="space-y-3">
+    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+      Wash Quality
+    </label>
+    <div className="grid grid-cols-2 gap-2">
+      {["Normal", "Premium"].map(q => (
+        <button
+          key={q}
+          onClick={() => setSelections({ ...selections, washQuality: q })}
+          className={`py-3 rounded-xl text-xs font-black border transition-all
+            ${selections.washQuality === q
+              ? "bg-slate-900 text-white border-slate-900"
+              : "bg-white text-slate-400 border-slate-200"}
+          `}
+        >
+          {q}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+{/* Iron Quality */}
+{["Iron", "Both"].includes(selections.mode) && (
+  <div className="space-y-3">
+    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+      Iron Quality
+    </label>
+    <div className="grid grid-cols-2 gap-2">
+      {["Normal", "Steam"].map(q => (
+        <button
+          key={q}
+          onClick={() => setSelections({ ...selections, ironQuality: q })}
+          className={`py-3 rounded-xl text-xs font-black border transition-all
+            ${selections.ironQuality === q
+              ? "bg-slate-900 text-white border-slate-900"
+              : "bg-white text-slate-400 border-slate-200"}
+          `}
+        >
+          {q}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
 							{/* Quantity Selector - Large Touch Area */}
 							<div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
 								<span className="font-black text-slate-800 uppercase tracking-widest text-xs">Quantity</span>
