@@ -17,7 +17,6 @@ const Booking = () => {
 	const [step, setStep] = useState("selection");
 	const [isMobileBasketOpen, setIsMobileBasketOpen] = useState(false);
 	const phoneno = sessionStorage.getItem('name')
-	console.log(phoneno)
 
 	const categoryImages = {
 		Shirt: "https://cdn-icons-png.flaticon.com/512/2503/2503380.png",
