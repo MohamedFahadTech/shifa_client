@@ -83,6 +83,26 @@ const Booking = () => {
 	const totalAmount = cart.reduce((s, i) => s + (i.price * i.qty), 0);
 
 	if (step === "success") return <SuccessScreen />;
+	// Inside the Booking component...
+    
+    if (step === "success") return <SuccessScreen />;
+
+    // PASTE THIS NEW BLOCK HERE:
+    if (step === "checkout") {
+        return (
+            <div className="min-h-screen bg-slate-50">
+                 <nav className="w-full bg-white border-b px-[5%] py-4">
+                    <h1 className="text-xl font-black text-blue-600">Launderly.</h1>
+                </nav>
+                <CheckoutForm 
+                    cart={cart} 
+                    totalAmount={totalAmount} 
+                    onBack={() => setStep("selection")}
+                    onComplete={() => setStep("success")}
+                />
+            </div>
+        );
+    }
 
 	return (
 		<div className="min-h-screen bg-slate-50 flex flex-col">
@@ -291,48 +311,147 @@ const Booking = () => {
 
 // Reusable Flexible Basket Component
 const BasketContent = ({ cart, removeFromCart, totalAmount, setStep, isMobile = false }) => (
-	<div className="flex flex-col h-full">
-		<div className="flex items-center justify-between mb-8">
-			<h3 className="text-2xl font-black text-slate-900">Your Basket</h3>
-			<span className="text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-600 px-3 py-1 rounded-full">{cart.length} Units</span>
-		</div>
+    <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-black text-slate-900">Your Basket</h3>
+            <span className="text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-600 px-3 py-1 rounded-full">{cart.length} Units</span>
+        </div>
 
-		<div className="space-y-6 mb-10">
-			{cart.length === 0 ? (
-				<div className="py-20 text-center opacity-30 font-black uppercase tracking-widest text-xs">Empty</div>
-			) : (
-				cart.map(item => (
-					<div key={item.id} className="flex justify-between items-center">
-						<div>
-							<p className="font-black text-slate-800 leading-tight">{item.qty}x {item.name}</p>
-							<p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-tight">{item.desc}</p>
-						</div>
-						<div className="flex items-center gap-4">
-							<span className="font-black text-slate-900">₹{item.price * item.qty}</span>
-							<button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors">
-								<XMarkIcon className="w-5 h-5" />
-							</button>
-						</div>
-					</div>
-				))
-			)}
-		</div>
+        <div className="space-y-6 mb-10">
+            {cart.length === 0 ? (
+                <div className="py-20 text-center opacity-30 font-black uppercase tracking-widest text-xs">Empty</div>
+            ) : (
+                cart.map(item => (
+                    <div key={item.id} className="flex justify-between items-center">
+                        <div>
+                            <p className="font-black text-slate-800 leading-tight">{item.qty}x {item.name}</p>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-tight">{item.desc}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span className="font-black text-slate-900">₹{item.price * item.qty}</span>
+                            <button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors">
+                                <XMarkIcon className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                ))
+            )}
+        </div>
 
-		<div className="mt-auto border-t pt-8 space-y-6">
-			<div className="flex justify-between items-end">
-				<span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Grand Total</span>
-				<span className="text-4xl font-black text-slate-900 tracking-tighter">₹{totalAmount}</span>
-			</div>
-			<button
-				onClick={() => setStep("success")}
-				disabled={cart.length === 0}
-				className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg uppercase tracking-widest hover:bg-slate-900 transition-all disabled:opacity-20 shadow-xl shadow-blue-100"
-			>
-				Checkout
-			</button>
-		</div>
-	</div>
+        <div className="mt-auto border-t pt-8 space-y-6">
+            <div className="flex justify-between items-end">
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Grand Total</span>
+                <span className="text-4xl font-black text-slate-900 tracking-tighter">₹{totalAmount}</span>
+            </div>
+            <button
+                // CHANGE IS HERE: Changed "success" to "checkout"
+                onClick={() => setStep("checkout")} 
+                disabled={cart.length === 0}
+                className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg uppercase tracking-widest hover:bg-slate-900 transition-all disabled:opacity-20 shadow-xl shadow-blue-100"
+            >
+                Confirm Order
+            </button>
+        </div>
+    </div>
 );
+const CheckoutForm = ({ cart, totalAmount, onComplete, onBack }) => {
+    const [formData, setFormData] = useState({
+        address: "",
+        pickupDate: "",
+        pickupSlot: "Morning",
+        paymentMethod: "COD"
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        const orderData = {
+            userId: sessionStorage.getItem('name'), 
+            items: cart.map(item => ({
+                category: item.name,
+                fabric: item.desc.split(' • ')[0],
+                serviceMode: item.desc.split(' • ')[1] === "Both" ? "Wash & Iron" : item.desc.split(' • ')[1],
+                unitPrice: item.price,
+                quantity: item.qty,
+                totalPrice: item.price * item.qty
+            })),
+            totalAmount: totalAmount,
+            pickup: {
+                address: formData.address,
+                pickupDate: formData.pickupDate,
+                pickupSlot: formData.pickupSlot
+            },
+            payment: {
+                method: formData.paymentMethod
+            }
+        };
+
+        try {
+            // This sends the data to your backend
+            await axios.post("http://localhost:5000/orders", orderData);
+            onComplete(); 
+        } catch (err) {
+            console.error(err);
+            alert("Error placing order.");
+        }
+    };
+
+    return (
+        <div className="max-w-2xl mx-auto p-8 bg-white rounded-[3rem] shadow-2xl border border-slate-100 my-10">
+            <button onClick={onBack} className="text-slate-400 font-black text-xs uppercase tracking-widest mb-6 flex items-center gap-2 hover:text-blue-600">
+                ← Back to Items
+            </button>
+            
+            <h2 className="text-4xl font-black text-slate-900 mb-2">Checkout</h2>
+            <p className="text-slate-400 font-bold mb-8">Tell us where to pick up your laundry</p>
+            
+            <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="space-y-3">
+                    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Pickup Address</label>
+                    <textarea 
+                        required
+                        className="w-full p-6 rounded-[2rem] bg-slate-50 border-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 placeholder:text-slate-300"
+                        placeholder="House No, Building, Area..."
+                        value={formData.address}
+                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Date</label>
+                        <input type="date" required className="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold"
+                            onChange={(e) => setFormData({...formData, pickupDate: e.target.value})} />
+                    </div>
+                    <div className="space-y-3">
+                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Time Slot</label>
+                        <select className="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold"
+                            onChange={(e) => setFormData({...formData, pickupSlot: e.target.value})}>
+                            <option value="Morning">Morning (8-12)</option>
+                            <option value="Evening">Evening (4-8)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Payment Mode</label>
+                    <div className="flex gap-3">
+                        {["COD", "UPI"].map(m => (
+                            <button key={m} type="button" onClick={() => setFormData({...formData, paymentMethod: m})}
+                                className={`flex-1 py-4 rounded-2xl font-black border transition-all ${formData.paymentMethod === m ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-400 border-slate-200'}`}>
+                                {m}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <button type="submit" className="w-full bg-blue-600 text-white py-6 rounded-[2rem] font-black text-xl shadow-xl hover:scale-[1.02] transition-all">
+                    Confirm Order • ₹{totalAmount}
+                </button>
+            </form>
+        </div>
+    );
+};
 
 const SuccessScreen = () => (
 	<div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
