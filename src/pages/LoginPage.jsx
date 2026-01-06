@@ -32,8 +32,19 @@ function AuthPage() {
         try {
             const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
             if (response.data.success) {
-                if (isLogin) { navigate('/layout/home'); }
-                else { setIsLogin(true); }
+                if (isLogin) {
+                    // 1. Get user data from response
+                    const userData = response.data.user;
+
+                    // 2. Store in Session Storage
+                    // Note: We use JSON.stringify because sessionStorage only stores strings
+                    sessionStorage.setItem("phoneno", userData.phone)
+                    sessionStorage.setItem("name", userData.name)
+                    sessionStorage.setItem("role", userData.role);
+
+                    // 3. Navigate to home
+                    navigate('/layout/home');
+                }
             } else { alert(response.data.message); }
         } catch (error) {
             console.error('Auth error:', error);
