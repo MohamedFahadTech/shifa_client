@@ -13,7 +13,8 @@ import {
 	TruckIcon,
 	MapPinIcon,
 	TicketIcon,
-	AcademicCapIcon, // or SparklesIcon for Subscriptions
+	ClipboardDocumentCheckIcon,
+	AcademicCapIcon,
 	QueueListIcon,
 } from "@heroicons/react/24/outline";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
@@ -38,6 +39,77 @@ const SidebarItem = ({ to, icon: Icon, label, onClick }) => (
 
 const DashboardLayout = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const role = sessionStorage.getItem("role"); // "user" or "admin"
+	const MENU_ITEMS = [
+		{
+			to: "/layout/dashboard",
+			icon: Squares2X2Icon,
+			label: "Dashboard",
+			roles: ["admin"],
+		},
+		{
+			to: "/layout/laundryOrder",
+			icon: ShoppingBagIcon,
+			label: "Laundry Orders",
+			roles: ["admin"],
+		},
+		{
+			to: "/layout/customer",
+			icon: UserGroupIcon,
+			label: "Customers",
+			roles: ["admin"],
+		},
+		{
+			to: "/reports",
+			icon: ChartBarIcon,
+			label: "Analytics",
+			roles: ["admin"],
+		},
+		{
+			to: "/layout/pickup",
+			icon: MapPinIcon,
+			label: "Pickups",
+			roles: ["admin"],
+		},
+		{
+			to: "/layout/delivery",
+			icon: TruckIcon,
+			label: "Deliveries",
+			roles: ["admin"],
+		},
+		{
+			to: "/layout/subscriptions",
+			icon: TicketIcon,
+			label: "Subscriptions",
+			roles: ["admin", "user"],
+		},
+		{
+			to: "/layout/bookings",
+			icon: ClipboardDocumentListIcon,
+			label: "Bookings",
+			roles: ["admin", "user"],
+		},
+		{
+			to: "/layout/settings",
+			icon: Cog6ToothIcon,
+			label: "Settings",
+			roles: ["admin", "user"],
+		},
+		{
+			to: "/layout/myOrders",
+			icon: ClipboardDocumentCheckIcon,
+			label: "My Orders",
+			roles: [ "user"],
+		},
+
+	];
+
+	const handleLogout = () => {
+		sessionStorage.clear();
+		navigate("/");
+	};
+
+
 
 	return (
 		<div className="flex h-screen bg-[#F8F9FA] text-[#0B0C0F] overflow-hidden">
@@ -64,25 +136,30 @@ const DashboardLayout = () => {
 						Internal Console
 					</div>
 					<nav className="flex-1 space-y-2">
-						<SidebarItem to="/layout/dashboard" icon={Squares2X2Icon} label="Dashboard" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/laundryOrder" icon={ShoppingBagIcon} label="Laundry Orders" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/customer" icon={UserGroupIcon} label="Customers" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/reports" icon={ChartBarIcon} label="Analytics" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/pickup" icon={MapPinIcon} label="Pickups" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/delivery" icon={TruckIcon} label="Deliveries" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/subscriptions" icon={TicketIcon} label="Subscriptions" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/home" icon={AcademicCapIcon} label="Home" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/bookings" icon={ClipboardDocumentListIcon} label="Bookings" onClick={() => setIsMobileMenuOpen(false)} />
-						<SidebarItem to="/layout/settings" icon={Cog6ToothIcon} label="Settings" onClick={() => setIsMobileMenuOpen(false)} />
+						{MENU_ITEMS
+							.filter(item => item.roles.includes(role))
+							.map(item => (
+								<SidebarItem
+									key={item.to}
+									to={item.to}
+									icon={item.icon}
+									label={item.label}
+									onClick={() => setIsMobileMenuOpen(false)}
+								/>
+							))}
 					</nav>
+
 
 					{/* Bottom Section */}
 					<div className="pt-6 border-t border-white/10 space-y-2">
-						<SidebarItem to="/settings" icon={Cog6ToothIcon} label="Logout" onClick={() => setIsMobileMenuOpen(false)} />
-						<button className="flex items-center space-x-3 px-4 py-3 w-full text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all group">
+						<button
+							onClick={handleLogout}
+							className="flex items-center space-x-3 px-4 py-3 w-full text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all group"
+						>
 							<ArrowLeftOnRectangleIcon className="h-5 w-5" />
 							<span className="text-[15px] font-semibold tracking-tight">Sign Out</span>
 						</button>
+
 					</div>
 				</div>
 			</aside>

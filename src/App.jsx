@@ -11,6 +11,8 @@ import Delivery from "./pages/Delivery";
 import Analytics from "./pages/Analytics";
 import Home from "./pages/Home";
 import Booking from "./pages/Booking";
+import MyOrder from "./pages/MyOrder";
+
 
 function App() {
 
@@ -28,6 +30,8 @@ function App() {
 					<Route path="Analytics" element={<Analytics />} />
 					<Route path="home" element={<Home />} />
 					<Route path="bookings" element={<Booking />} />
+					<Route path="myOrders" element={<MyOrder />} />
+					
 				</Route>
 			</Routes>
 		</Router>
