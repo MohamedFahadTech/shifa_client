@@ -78,10 +78,10 @@ const DashboardLayout = () => {
 			roles: ["admin"],
 		},
 		{
-			to: "/layout/subscriptions",
-			icon: TicketIcon,
-			label: "Subscriptions",
-			roles: ["admin", "user"],
+			to: "/layout/myOrders",
+			icon: ClipboardDocumentCheckIcon,
+			label: "My Orders",
+			roles: [ "user"],
 		},
 		{
 			to: "/layout/bookings",
@@ -89,18 +89,15 @@ const DashboardLayout = () => {
 			label: "Bookings",
 			roles: ["admin", "user"],
 		},
+		
+		
 		{
 			to: "/layout/settings",
-			icon: Cog6ToothIcon,
-			label: "Settings",
+			icon: TruckIcon,
+			label: "Pickup & Delivery",
 			roles: ["admin", "user"],
 		},
-		{
-			to: "/layout/myOrders",
-			icon: ClipboardDocumentCheckIcon,
-			label: "My Orders",
-			roles: [ "user"],
-		},
+		
 
 	];
 
@@ -214,14 +211,6 @@ const DashboardLayout = () => {
 				{/* Dynamic Page Content */}
 				<main className="flex-1 overflow-y-auto bg-[#F8F9FA] p-8">
 					<div className="max-w-7xl mx-auto">
-						{/* Contextual Header that feels like the Login Header */}
-						<div className="mb-10">
-							<h2 className="text-3xl font-black text-[#0B0C0F] tracking-tight">
-								SYSTEM <span className="text-[#F6C453]">OVERVIEW</span>
-							</h2>
-							<div className="h-1 w-12 bg-[#0B0C0F] mt-2 rounded-full"></div>
-						</div>
-
 						{/* The actual page content loads here */}
 						<div className="bg-white rounded-[32px] border border-gray-200 p-8 shadow-sm min-h-[60vh]">
 							<Outlet />
