@@ -19,18 +19,16 @@ import {
 } from "@heroicons/react/24/outline";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 
-
-
 const SidebarItem = ({ to, icon: Icon, label, onClick }) => (
 	<NavLink
 		to={to}
 		onClick={onClick}
 		className={({ isActive }) => `
-      flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 group
-      ${isActive
+		flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 group
+		${isActive
 				? "bg-[#F6C453] text-[#0B0C0F] font-bold shadow-lg shadow-[#F6C453]/20"
 				: "text-gray-400 hover:bg-white/5 hover:text-white"}
-    `}
+    	`}
 	>
 		<Icon className="h-5 w-5 shrink-0" />
 		<span className="text-[15px] tracking-tight">{label}</span>
@@ -38,8 +36,11 @@ const SidebarItem = ({ to, icon: Icon, label, onClick }) => (
 );
 
 const DashboardLayout = () => {
+
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const role = sessionStorage.getItem("role"); // "user" or "admin"
+	const role = sessionStorage.getItem("role");
+	const name = sessionStorage.getItem("name");
+
 	const MENU_ITEMS = [
 		{
 			to: "/layout/dashboard",
@@ -81,7 +82,7 @@ const DashboardLayout = () => {
 			to: "/layout/myOrders",
 			icon: ClipboardDocumentCheckIcon,
 			label: "My Orders",
-			roles: [ "user"],
+			roles: ["user"],
 		},
 		{
 			to: "/layout/bookings",
@@ -89,16 +90,12 @@ const DashboardLayout = () => {
 			label: "Bookings",
 			roles: ["admin", "user"],
 		},
-		
-		
 		{
 			to: "/layout/settings",
 			icon: TruckIcon,
 			label: "Pickup & Delivery",
 			roles: ["admin", "user"],
 		},
-		
-
 	];
 
 	const handleLogout = () => {
@@ -106,16 +103,19 @@ const DashboardLayout = () => {
 		navigate("/");
 	};
 
-
+	const toTitleCase = (str = "") =>
+		str.replace(/\w\S*/g, txt =>
+			txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
+		);
 
 	return (
 		<div className="flex h-screen bg-[#F8F9FA] text-[#0B0C0F] overflow-hidden">
 
 			{/* --- SIDEBAR (Matches Login Left Side) --- */}
 			<aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-[#0B0C0F] transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
-        ${isMobileMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
-      `}>
+				fixed inset-y-0 left-0 z-50 w-72 bg-[#0B0C0F] transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
+				${isMobileMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
+			`}>
 				<div className="flex flex-col h-full px-6 py-8">
 					{/* Logo Section */}
 					<div className="mb-10 px-2">
@@ -194,8 +194,10 @@ const DashboardLayout = () => {
 
 						<div className="flex items-center space-x-4">
 							<div className="text-right hidden sm:block">
-								<p className="text-sm font-bold text-[#0B0C0F]">Admin User</p>
-								<p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Premium Tier</p>
+								<p className="text-sm font-bold text-[#0B0C0F]">
+									{name?.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1).toLowerCase()) || "NA"}
+								</p>
+								<p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Our Client</p>
 							</div>
 							<div className="h-10 w-10 rounded-full border-2 border-[#F6C453] p-0.5 shadow-sm">
 								<img
