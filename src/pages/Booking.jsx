@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Booking = () => {
+
     const [services, setServices] = useState([]);
     const [selections, setSelections] = useState(null);
     const [cart, setCart] = useState([]);
@@ -89,9 +90,9 @@ const Booking = () => {
                 <nav className="w-full bg-white border-b px-[5%] py-4">
                     <h1 className="text-xl font-black text-blue-600">Launderly.</h1>
                 </nav>
-                <CheckoutForm 
-                    cart={cart} 
-                    totalAmount={totalAmount} 
+                <CheckoutForm
+                    cart={cart}
+                    totalAmount={totalAmount}
                     onBack={() => setStep("selection")}
                     onComplete={() => setStep("success")}
                 />
@@ -193,52 +194,52 @@ const Booking = () => {
                                 </div>
                             )}
 
-							{/* Wash Quality */}
-{["Wash", "Both"].includes(selections.mode) && (
-  <div className="space-y-3">
-    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
-      Wash Quality
-    </label>
-    <div className="grid grid-cols-2 gap-2">
-      {["Normal", "Premium"].map(q => (
-        <button
-          key={q}
-          onClick={() => setSelections({ ...selections, washQuality: q })}
-          className={`py-3 rounded-xl text-xs font-black border transition-all
+                            {/* Wash Quality */}
+                            {["Wash", "Both"].includes(selections.mode) && (
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+                                        Wash Quality
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {["Normal", "Premium"].map(q => (
+                                            <button
+                                                key={q}
+                                                onClick={() => setSelections({ ...selections, washQuality: q })}
+                                                className={`py-3 rounded-xl text-xs font-black border transition-all
             ${selections.washQuality === q
-              ? "bg-slate-900 text-white border-slate-900"
-              : "bg-white text-slate-400 border-slate-200"}
+                                                        ? "bg-slate-900 text-white border-slate-900"
+                                                        : "bg-white text-slate-400 border-slate-200"}
           `}
-        >
-          {q}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-{/* Iron Quality */}
-{["Iron", "Both"].includes(selections.mode) && (
-  <div className="space-y-3">
-    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
-      Iron Quality
-    </label>
-    <div className="grid grid-cols-2 gap-2">
-      {["Normal", "Steam"].map(q => (
-        <button
-          key={q}
-          onClick={() => setSelections({ ...selections, ironQuality: q })}
-          className={`py-3 rounded-xl text-xs font-black border transition-all
+                                            >
+                                                {q}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {/* Iron Quality */}
+                            {["Iron", "Both"].includes(selections.mode) && (
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+                                        Iron Quality
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {["Normal", "Steam"].map(q => (
+                                            <button
+                                                key={q}
+                                                onClick={() => setSelections({ ...selections, ironQuality: q })}
+                                                className={`py-3 rounded-xl text-xs font-black border transition-all
             ${selections.ironQuality === q
-              ? "bg-slate-900 text-white border-slate-900"
-              : "bg-white text-slate-400 border-slate-200"}
+                                                        ? "bg-slate-900 text-white border-slate-900"
+                                                        : "bg-white text-slate-400 border-slate-200"}
           `}
-        >
-          {q}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
+                                            >
+                                                {q}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
 
                             <div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
@@ -331,7 +332,7 @@ const BasketContent = ({ cart, removeFromCart, totalAmount, setStep }) => (
                 <span className="text-4xl font-black text-slate-900 tracking-tighter">₹{totalAmount}</span>
             </div>
             <button
-                onClick={() => setStep("checkout")} 
+                onClick={() => setStep("checkout")}
                 disabled={cart.length === 0}
                 className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg uppercase tracking-widest hover:bg-slate-900 transition-all disabled:opacity-20 shadow-xl shadow-blue-100"
             >
@@ -342,6 +343,7 @@ const BasketContent = ({ cart, removeFromCart, totalAmount, setStep }) => (
 );
 
 const CheckoutForm = ({ cart, totalAmount, onComplete, onBack }) => {
+
     const [formData, setFormData] = useState({
         address: "",
         phoneNo: sessionStorage.getItem('name') || "", // Pulls name/phone from session
@@ -352,34 +354,48 @@ const CheckoutForm = ({ cart, totalAmount, onComplete, onBack }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const orderData = {
-            userId: sessionStorage.getItem('name'), 
-            phoneNo: formData.phoneNo,
+            // ✅ userId comes ONLY from sessionStorage phone number
+            userId: sessionStorage.getItem("phoneno"),
+
             items: cart.map(item => ({
                 category: item.name,
-                fabric: item.desc.split(' • ')[0],
-                serviceMode: item.desc.split(' • ')[1] === "Both" ? "Wash & Iron" : item.desc.split(' • ')[1],
+                fabric: item.desc.split(" • ")[0],
+                serviceMode:
+                    item.desc.split(" • ")[1] === "Both"
+                        ? "Wash & Iron"
+                        : item.desc.split(" • ")[1],
                 unitPrice: item.price,
                 quantity: item.qty,
                 totalPrice: item.price * item.qty
             })),
-            totalAmount: totalAmount,
+
+            totalAmount,
+
             pickup: {
                 address: formData.address,
                 pickupDate: formData.pickupDate,
-                pickupSlot: formData.pickupSlot
+                pickupSlot: formData.pickupSlot,
+
+                // ✅ phone number typed in form
+                phoneNo: formData.phoneNo
             },
-            payment: { method: formData.paymentMethod }
+
+            payment: {
+                method: formData.paymentMethod
+            }
         };
 
         try {
             await axios.post("http://localhost:5000/orders", orderData);
-            onComplete(); 
+            onComplete();
         } catch (err) {
             console.error(err);
             alert("Error placing order.");
         }
     };
+
 
     return (
         <div className="max-w-2xl mx-auto p-8 bg-white rounded-[3rem] shadow-2xl border border-slate-100 my-10">
@@ -387,36 +403,36 @@ const CheckoutForm = ({ cart, totalAmount, onComplete, onBack }) => {
                 ← Back to Items
             </button>
             <h2 className="text-4xl font-black text-slate-900 mb-8">Checkout</h2>
-            
+
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="space-y-3">
                     <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Contact Number</label>
-                    <input 
+                    <input
                         type="tel" required
                         className="w-full p-6 rounded-[2rem] bg-blue-50 border-2 border-blue-100 focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
                         value={formData.phoneNo}
-                        onChange={(e) => setFormData({...formData, phoneNo: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, phoneNo: e.target.value })}
                     />
                 </div>
                 <div className="space-y-3">
                     <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Pickup Address</label>
-                    <textarea 
+                    <textarea
                         required className="w-full p-6 rounded-[2rem] bg-slate-50 border-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
                         placeholder="House No, Area..."
                         value={formData.address}
-                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-3">
                         <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Date</label>
                         <input type="date" required className="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold"
-                            onChange={(e) => setFormData({...formData, pickupDate: e.target.value})} />
+                            onChange={(e) => setFormData({ ...formData, pickupDate: e.target.value })} />
                     </div>
                     <div className="space-y-3">
                         <label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Slot</label>
                         <select className="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold"
-                            onChange={(e) => setFormData({...formData, pickupSlot: e.target.value})}>
+                            onChange={(e) => setFormData({ ...formData, pickupSlot: e.target.value })}>
                             <option value="Morning">Morning (8-12)</option>
                             <option value="Evening">Evening (4-8)</option>
                         </select>
